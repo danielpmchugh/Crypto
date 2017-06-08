@@ -22,7 +22,31 @@
 
         private static string MySha1(string input)
         {
+            var h0 = 0x67452301;
+            var h1 = 0xEFCDAB89;
+            var h2 = 0x98BADCFE;
+            var h3 = 0x10325476;
+            var h4 = 0xC3D2E1F0;
+            var numberOfBitsPerChar = 8;
+
+                       
+            var message = Encoding.ASCII.GetBytes(input);
+            
+
+            BitConverter.ToUInt32(message, 0);
+            var m1 = message.Length * numberOfBitsPerChar;
+
+            // pre-processing
+            // message.Add(0x80);
+            // TODO: Need to manage little/big endian
             return string.Empty;
+
+        }
+
+        private static void SwapEndian(ref int val)
+        {
+            val = (val << 24) | ((val << 8) & 0x00ff0000) |
+                  ((val >> 8) & 0x0000ff00) | (val >> 24);
         }
 
         private static string MsftSha1(string input)
