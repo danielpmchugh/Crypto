@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq;
+    using System.Net;
     using System.Security.Cryptography;
     using System.Text;
 
@@ -30,14 +31,20 @@
             var numberOfBitsPerChar = 8;
 
                        
-            var message = Encoding.ASCII.GetBytes(input);
+            var message = Encoding.ASCII.GetBytes(input).ToList();
             
-
-            BitConverter.ToUInt32(message, 0);
-            var m1 = message.Length * numberOfBitsPerChar;
-
             // pre-processing
-            // message.Add(0x80);
+            message.Add(0x80);
+
+            var m1 = message.Count() * numberOfBitsPerChar;
+            for (var i = m1; i % 512 != 448; i+=8)
+            {
+                message.Add(0x00);
+            }
+            
+            var length_le = BitConverter.GetBytes(IPAddress.HostToNetworkOrder((long)m1));
+            message.AddRange(length_le);
+            
             // TODO: Need to manage little/big endian
             return string.Empty;
 
